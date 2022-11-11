@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.idea/
+core-build/
+cache/
+.DS_Store
+frontend/img/*
+!frontend/img/.gitkeep

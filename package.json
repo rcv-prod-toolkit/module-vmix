@@ -1,0 +1,26 @@
+{
+    "name": "module-vmix",
+    "version": "3.6.7",
+    "description": "Module that provides connection to vmix to execute functions voa the api",
+    "author": "RCVolus",
+    "license": "MIT",
+    "toolkit": {
+        "modes": [
+            "PLUGIN"
+        ],
+        "plugin": {
+            "main": "dist/plugin.js"
+        },
+        "needsBuild": true
+    },
+    "dependencies": {
+        "axios": "^0.21.1"
+    },
+    "devDependencies": {
+        "@rcv-prod-toolkit/types": "github:rcv-prod-toolkit/types",
+        "typescript": "^4.3.2"
+    },
+    "scripts": {
+        "build": "tsc"
+    }
+}
