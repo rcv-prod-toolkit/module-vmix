@@ -1,6 +1,6 @@
 {
     "name": "module-vmix",
-    "version": "3.6.7",
+    "version": "0.4.0",
     "description": "Module that provides connection to vmix to execute functions voa the api",
     "author": "RCVolus",
     "license": "MIT",
