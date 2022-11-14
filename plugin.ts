@@ -1,5 +1,5 @@
 import type { PluginContext } from '@rcv-prod-toolkit/types'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 module.exports = async (ctx: PluginContext) => {
   const namespace = ctx.plugin.module.getName()
@@ -64,6 +64,16 @@ module.exports = async (ctx: PluginContext) => {
     })
   })
 
+  async function executeFunc(func: string): Promise<void> {
+    try {
+      ctx.log.debug(`Executing function ${func}`)
+      await axios.get(`http://${config.ip}:${config.port}/api/?${func}`)
+    } catch (error) {
+      const e = error as AxiosError
+      ctx.log.error(`Function could not be executed ${e.response?.status ?? 404}: ${e.response?.statusText ?? 'vMix could not be reached'}`)
+    }
+  }
+
   ctx.LPTE.on(namespace, 'delete', async (e: any) => {
     await ctx.LPTE.request({
       meta: {
@@ -116,7 +126,7 @@ module.exports = async (ctx: PluginContext) => {
     })
 
     ctx.LPTE.on(namespace, e.listener, async () => {
-      await axios.get(`http://${config.ip}:${config.port}/api/?${e.function}`)
+      await executeFunc(e.function)
     })
 
     const res = await ctx.LPTE.request({
@@ -194,7 +204,7 @@ module.exports = async (ctx: PluginContext) => {
 
   res.data.forEach((f: any) => {
     ctx.LPTE.on(namespace, f.listener, async () => {
-      await axios.get(`http://${config.ip}:${config.port}/api/?${f.function}`)
+      await executeFunc(f.function)
     })
   });
 }
