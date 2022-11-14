@@ -20,6 +20,21 @@ module.exports = async (ctx: PluginContext) => {
     ]
   })
 
+  const configRes = await ctx.LPTE.request({
+    meta: {
+      type: 'request',
+      namespace: 'plugin-config',
+      version: 1
+    }
+  })
+  if (configRes === undefined) {
+    ctx.log.warn('config could not be loaded')
+  }
+  let config = Object.assign({
+    ip: '127.0.0.1',
+    port: 8088
+  }, configRes?.config)
+
   ctx.LPTE.on(namespace, 'delete', async (e: any) => {
     await ctx.LPTE.request({
       meta: {
@@ -72,7 +87,7 @@ module.exports = async (ctx: PluginContext) => {
     })
 
     ctx.LPTE.on(namespace, e.listener, async () => {
-      await axios.get(`http://127.0.0.1:8088/api/?${e.function}`)
+      await axios.get(`http://${config.ip}:${config.port}/api/?${e.function}`)
     })
 
     const res = await ctx.LPTE.request({
@@ -150,7 +165,7 @@ module.exports = async (ctx: PluginContext) => {
 
   res.data.forEach((f: any) => {
     ctx.LPTE.on(namespace, f.listener, async () => {
-      await axios.get(`http://127.0.0.1:8088/api/?${f.function}`)
+      await axios.get(`http://${config.ip}:${config.port}/api/?${f.function}`)
     })
   });
 }
