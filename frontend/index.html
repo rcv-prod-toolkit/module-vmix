@@ -39,4 +39,33 @@
 </button>
 </form>
 
+<form id="settings" class="mt-5">
+  <h2>Settings</h2>
+  <div class="form-group">
+    <label for="ip">IP</label>
+    <input
+      type="text"
+      class="form-control"
+      id="ip"
+      placeholder="IP"
+    />
+  </div>
+  <div class="form-group">
+    <label for="port">Port</label>
+    <input
+      type="number"
+      min="1"
+      step="1"
+      class="form-control"
+      id="port"
+      placeholder="Port"
+    />
+  </div>
+  <div class="d-flex">
+    <div class="form-group mr-3">
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+    </div>
+  </div>
+</form>
+
 <script src="/pages/op-module-vmix/frontend.js"></script>

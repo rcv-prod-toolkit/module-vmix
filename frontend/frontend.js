@@ -15,6 +15,25 @@ document.querySelector('#addFunction').addEventListener('submit', (e) => {
   })
 })
 
+document.querySelector('#settings').addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  LPTE.emit({
+    meta: {
+      namespace: 'module-vmix',
+      type: 'set-settings',
+      version: 1
+    },
+    ip: document.querySelector('#ip').value,
+    port: parseInt(document.querySelector('#port').value)
+  })
+})
+
+function initSettings(settings) {
+  document.querySelector('#ip').value = settings.ip
+  document.querySelector('#port').value = settings.port
+}
+
 function deleteFunction(id) {
   window.LPTE.emit({
     meta: {
@@ -68,4 +87,15 @@ window.LPTE.onready(async () => {
   displayFucntionTable(data)
 
   window.LPTE.on('module-vmix', 'update-vmix-set', displayFucntionTable)
+
+  const settings = await LPTE.request({
+    meta: {
+      namespace: 'module-vmix',
+      type: 'get-settings',
+      version: 1
+    }
+  })
+  initSettings(settings)
+
+  LPTE.on('module-vmix', 'set-settings', initSettings)
 })

@@ -35,6 +35,35 @@ module.exports = async (ctx: PluginContext) => {
     port: 8088
   }, configRes?.config)
 
+  ctx.LPTE.on(namespace, 'set-settings', async (e) => {
+    config.ip = e.ip,
+    config.port = e.port
+
+    ctx.LPTE.emit({
+      meta: {
+        type: 'set',
+        namespace: 'plugin-config',
+        version: 1
+      },
+      config: {
+        ip: config.ip,
+        port: config.port
+      }
+    })
+  })
+
+  ctx.LPTE.on(namespace, 'get-settings', (e) => {
+    ctx.LPTE.emit({
+      meta: {
+        type: e.meta.reply!,
+        namespace: 'reply',
+        version: 1
+      },
+      ip: config.ip,
+      port: config.port
+    })
+  })
+
   ctx.LPTE.on(namespace, 'delete', async (e: any) => {
     await ctx.LPTE.request({
       meta: {
