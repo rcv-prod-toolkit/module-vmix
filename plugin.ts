@@ -30,14 +30,16 @@ module.exports = async (ctx: PluginContext) => {
   if (configRes === undefined) {
     ctx.log.warn('config could not be loaded')
   }
-  let config = Object.assign({
-    ip: '127.0.0.1',
-    port: 8088
-  }, configRes?.config)
+  let config = Object.assign(
+    {
+      ip: '127.0.0.1',
+      port: 8088
+    },
+    configRes?.config
+  )
 
   ctx.LPTE.on(namespace, 'set-settings', async (e) => {
-    config.ip = e.ip,
-    config.port = e.port
+    ;(config.ip = e.ip), (config.port = e.port)
 
     ctx.LPTE.emit({
       meta: {
@@ -70,7 +72,11 @@ module.exports = async (ctx: PluginContext) => {
       await axios.get(`http://${config.ip}:${config.port}/api/?${func}`)
     } catch (error) {
       const e = error as AxiosError
-      ctx.log.error(`Function could not be executed ${e.response?.status ?? 404}: ${e.response?.statusText ?? 'vMix could not be reached'}`)
+      ctx.log.error(
+        `Function could not be executed ${e.response?.status ?? 404}: ${
+          e.response?.statusText ?? 'vMix could not be reached'
+        }`
+      )
     }
   }
 
@@ -121,7 +127,7 @@ module.exports = async (ctx: PluginContext) => {
       collection: 'vmix',
       data: {
         listener: e.listener,
-        function: e.function,
+        function: e.function
       }
     })
 
@@ -206,5 +212,5 @@ module.exports = async (ctx: PluginContext) => {
     ctx.LPTE.on(namespace, f.listener, async () => {
       await executeFunc(f.function)
     })
-  });
+  })
 }
