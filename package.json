@@ -14,11 +14,11 @@
         "needsBuild": true
     },
     "dependencies": {
-        "axios": "^1.4.0"
+        "axios": "^1.6.2"
     },
     "devDependencies": {
         "@rcv-prod-toolkit/types": "github:rcv-prod-toolkit/types",
-        "typescript": "^5.0.4"
+        "typescript": "^5.3.2"
     },
     "scripts": {
         "build": "tsc"
