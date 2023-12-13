@@ -91,7 +91,7 @@ module.exports = async (ctx: PluginContext) => {
       id: e.id
     })
 
-    ctx.LPTE.unregister(namespace, e.listener)
+    ctx.LPTE.unregister(e.namespace, e.listener)
 
     const res = await ctx.LPTE.request({
       meta: {
@@ -126,12 +126,13 @@ module.exports = async (ctx: PluginContext) => {
       },
       collection: 'vmix',
       data: {
+        namespace: e.namespace,
         listener: e.listener,
         function: e.function
       }
     })
 
-    ctx.LPTE.on(namespace, e.listener, async () => {
+    ctx.LPTE.on(e.namespace, e.listener, async () => {
       await executeFunc(e.function)
     })
 
@@ -209,7 +210,7 @@ module.exports = async (ctx: PluginContext) => {
   }
 
   res.data.forEach((f: any) => {
-    ctx.LPTE.on(namespace, f.listener, async () => {
+    ctx.LPTE.on(f.namespace, f.listener, async () => {
       await executeFunc(f.function)
     })
   })

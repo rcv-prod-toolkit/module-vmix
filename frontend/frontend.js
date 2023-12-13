@@ -11,7 +11,8 @@ document.querySelector('#addFunction').addEventListener('submit', (e) => {
       version: 1
     },
     function: document.querySelector('#function').value,
-    listener: document.querySelector('#listener').value
+    listener: document.querySelector('#listener').value,
+    namespace: document.querySelector('#namespace').value,
   })
 })
 
@@ -34,19 +35,20 @@ function initSettings(settings) {
   document.querySelector('#port').value = settings.port
 }
 
-function deleteFunction(id) {
+function deleteFunction(id, namespace, listener) {
   window.LPTE.emit({
     meta: {
       namespace: 'module-vmix',
       type: 'delete',
       version: 1
     },
-    id
+    id,
+    namespace,
+    listener
   })
 }
 
-function displayFucntionTable(data) {
-  console.log(data)
+function displayFunctionTable(data) {
   if (data.functions === undefined) return
 
   functions.innerHTML = ''
@@ -54,9 +56,13 @@ function displayFucntionTable(data) {
   data.functions.forEach((f) => {
     const row = document.createElement('tr')
 
-    const nameTd = document.createElement('td')
-    nameTd.innerText = f.listener
-    row.appendChild(nameTd)
+    const namespaceTd = document.createElement('td')
+    namespaceTd.innerText = f.namespace
+    row.appendChild(namespaceTd)
+
+    const listenerTd = document.createElement('td')
+    listenerTd.innerText = f.listener
+    row.appendChild(listenerTd)
 
     const handleTd = document.createElement('td')
     handleTd.innerText = f.function
@@ -67,7 +73,7 @@ function displayFucntionTable(data) {
     deleteBtn.classList.add('btn', 'btn-danger')
     deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>'
     deleteBtn.onclick = () => {
-      deleteFunction(f.id)
+      deleteFunction(f.id, f.namespace, f.listener)
     }
     deleteTd.appendChild(deleteBtn)
     row.appendChild(deleteTd)
@@ -84,9 +90,9 @@ window.LPTE.onready(async () => {
       version: 1
     }
   })
-  displayFucntionTable(data)
+  displayFunctionTable(data)
 
-  window.LPTE.on('module-vmix', 'update-vmix-set', displayFucntionTable)
+  window.LPTE.on('module-vmix', 'update-vmix-set', displayFunctionTable)
 
   const settings = await LPTE.request({
     meta: {
